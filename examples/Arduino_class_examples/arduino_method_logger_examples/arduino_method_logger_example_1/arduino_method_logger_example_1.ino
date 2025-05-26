@@ -12,7 +12,8 @@ using namespace pankey::Base;
 
 void setup() {
   Serial.begin(9600);
-  pankey_Log_Class_Method("Array", "addLocalValue");
+  pankey_Log_Class_Method("Array");
+  // pankey_Log_Class_Method("Array", "addLocalValue");
   pankey_Log_Start();
 }
 

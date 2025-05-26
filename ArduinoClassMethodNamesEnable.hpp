@@ -15,24 +15,41 @@
 		
 			template<class L>
 			bool ArduinoClassMethodNamesEnable(int a_status, const String& a_name, const String& a_method, L a_log){
-				for(auto entry :  g_ArduinoClassMethodNamesEnable_map){
-				  String f_key = entry.getKey();
-				  if(f_key != a_name){
-					continue;
-				  }
-				  ArrayRawList<String> f_value = entry.getValue();
-				  if(f_value.contain(a_method)){
-					return true;
-				  }
+				if(!g_ArduinoClassMethodNamesEnable_map.containKey(a_name)){
+					return false;
+				}
+				ArrayRawList<String>* i_methods = g_ArduinoClassMethodNamesEnable_map.getValuePointer(a_name);
+				if(i_methods != nullptr){
+					if(i_methods->isEmpty()){
+						return true;
+					}
+					if(i_methods->contain(a_method)){
+					  return true;
+					}
 				}
 				return false;
+			}
+
+			void pankey_Log_Class(String a_class){
+				if(g_ArduinoClassMethodNamesEnable_map.containKey(a_class)){
+					return;
+				}
+				g_ArduinoClassMethodNamesEnable_map.add(a_class,ArrayRawList<String>());
 			}
 
 			template<class... Args>
 			void pankey_Log_Class_Method(String a_class, Args... a_methods){
 				ArrayRawList<String> i_methods;
 				i_methods.addPack(a_methods...);
-				g_ArduinoClassMethodNamesEnable_map.put(a_class,i_methods);
+				if(g_ArduinoClassMethodNamesEnable_map.containKey(a_class)){
+					ArrayRawList<String>* l_methods = g_ArduinoClassMethodNamesEnable_map.getValuePointer(a_class);
+					if(l_methods == nullptr){
+						return;
+					}
+					l_methods->addCopy(i_methods);
+					return;
+				}
+				g_ArduinoClassMethodNamesEnable_map.add(a_class,i_methods);
 			}
 
 		}
